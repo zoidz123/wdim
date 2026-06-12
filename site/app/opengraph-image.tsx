@@ -1,0 +1,84 @@
+import { ImageResponse } from "next/og";
+
+export const alt = "What did I miss?";
+export const size = {
+  width: 1200,
+  height: 630
+};
+export const contentType = "image/png";
+
+export default function Image() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          backgroundColor: "#fffdf8",
+          color: "#071109"
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 14% 82%, rgba(200, 229, 206, 0.72), transparent 25%), radial-gradient(circle at 86% 78%, rgba(244, 236, 196, 0.82), transparent 27%), radial-gradient(ellipse at 50% 76%, rgba(99, 217, 127, 0.2), transparent 30%)"
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 30,
+            border: "1px solid rgba(7, 17, 9, 0.12)",
+            borderRadius: 34
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 54,
+            left: 58,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            fontFamily: "Georgia, serif",
+            fontSize: 38
+          }}
+        >
+          <div
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: 9,
+              background: "#071109"
+            }}
+          />
+          <span>wdim</span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            maxWidth: 940,
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            fontFamily: "Georgia, serif",
+            fontSize: 134,
+            fontWeight: 400,
+            letterSpacing: 0,
+            lineHeight: 0.88
+          }}
+        >
+          What did I miss?
+        </div>
+      </div>
+    ),
+    size
+  );
+}
