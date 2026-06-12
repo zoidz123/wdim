@@ -5,7 +5,7 @@ const integrations = [
   { name: "X", logo: "/logos/x.svg" }
 ];
 
-const betaDownloadHref = "https://download.wdim.app/releases/wdim-0.1.3-arm64.dmg?v=e66fc030";
+const betaDownloadHref = "https://download.wdim.app/releases/wdim-0.1.4-arm64.dmg?v=4d466871-1";
 
 const steps = [
   {
