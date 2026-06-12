@@ -4,8 +4,8 @@ import path from "node:path";
 
 export const alt = "What did I miss?";
 export const size = {
-  width: 1200,
-  height: 630
+  width: 2400,
+  height: 1260
 };
 export const contentType = "image/png";
 
@@ -42,30 +42,30 @@ export default async function Image() {
         <div
           style={{
             position: "absolute",
-            inset: 30,
+            inset: 60,
             border: "1px solid rgba(7, 17, 9, 0.12)",
-            borderRadius: 34
+            borderRadius: 68
           }}
         />
         <div
           style={{
             position: "absolute",
-            top: 54,
-            left: 58,
+            top: 108,
+            left: 116,
             display: "flex",
             alignItems: "center",
-            gap: 14,
+            gap: 28,
             fontFamily: "Instrument Serif",
-            fontSize: 38
+            fontSize: 76
           }}
         >
           <img
             src={iconSrc}
             alt=""
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 9,
+              width: 68,
+              height: 68,
+              borderRadius: 18,
               objectFit: "cover"
             }}
           />
@@ -74,12 +74,12 @@ export default async function Image() {
         <div
           style={{
             display: "flex",
-            maxWidth: 940,
+            maxWidth: 1880,
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
             fontFamily: "Instrument Serif",
-            fontSize: 134,
+            fontSize: 268,
             fontWeight: 400,
             letterSpacing: 0,
             lineHeight: 0.88
