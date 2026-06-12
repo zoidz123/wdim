@@ -1,0 +1,83 @@
+{
+  "name": "what-did-i-miss-desktop",
+  "version": "0.1.3",
+  "description": "Mac app that turns missed updates into a short catch-up briefing.",
+  "author": "wdim",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "dev": "bun run scripts/dev.ts",
+    "dev:once": "bun run scripts/dev-once.ts",
+    "start": "bun run dev",
+    "build": "bun run scripts/build.ts",
+    "vendor:codex": "bun run scripts/vendor-codex.ts",
+    "vendor:ytdlp": "bun run scripts/vendor-ytdlp.ts",
+    "dist": "bun run dist:unsigned",
+    "dist:unsigned": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg",
+    "dist:signed": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && electron-builder --mac dmg",
+    "smoke:codex": "bun run scripts/codex-smoke.ts",
+    "smoke:twitter-ui": "electron scripts/twitter-ui-smoke.cjs",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "build": {
+    "appId": "ai.whatdidimiss.desktop",
+    "productName": "wdim",
+    "artifactName": "wdim-${version}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "notarize": true,
+      "target": [
+        "dmg"
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "dist/bird.mjs"
+    ],
+    "extraResources": [
+      {
+        "from": ".local-vendor/codex",
+        "to": "codex",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": ".local-vendor/yt-dlp",
+        "to": "yt-dlp",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "runtime.env",
+        "to": "runtime.env"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    }
+  },
+  "dependencies": {
+    "@steipete/bird": "0.8.0",
+    "@what-did-i-miss/shared": "workspace:*",
+    "googleapis": "^166.0.0",
+    "qrcode": "^1.5.4",
+    "telegram": "^2.26.22"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "@types/node": "^24.12.4",
+    "@types/qrcode": "^1.5.6",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.27.1",
+    "typescript": "^5.9.3"
+  }
+}

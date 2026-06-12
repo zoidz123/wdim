@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wdim</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="top" aria-label="Window controls area">
+        <button id="toggleSideRail" class="chrome-sidebar-toggle active" type="button" title="Hide sidebar" aria-label="Hide sidebar">
+          <span aria-hidden="true"></span>
+        </button>
+        <div class="top-drag-region" aria-hidden="true"></div>
+      </header>
+
+      <div class="workspace">
+        <aside class="side-rail" id="sideRail">
+          <nav class="rail-nav" aria-label="App sections">
+            <button class="rail-item active" type="button" data-view="home">
+              <span class="rail-icon rail-icon-home" aria-hidden="true"></span>
+              <span class="rail-label">Home</span>
+            </button>
+            <button class="rail-item" type="button" data-view="integrations">
+              <span class="rail-icon rail-icon-integrations" aria-hidden="true"></span>
+              <span class="rail-label">Sources</span>
+            </button>
+          </nav>
+          <div class="rail-account">
+            <button id="codexAccount" class="rail-account-button" type="button" hidden>Sign in with ChatGPT</button>
+          </div>
+        </aside>
+
+        <section class="content-shell">
+          <section class="app-view active" id="homeView">
+            <div class="home-layout" id="homeLayout">
+              <div class="home-main">
+                <div class="content-toolbar">
+                  <div>
+                    <strong id="status">Loading...</strong>
+                    <p id="statusDescription" class="status-description" hidden></p>
+                  </div>
+                  <div class="toolbar-actions">
+                    <button id="recentScanToggle" class="last-scan-link" type="button" aria-expanded="false">
+                      <span id="lastScanSummary">No scans yet</span>
+                    </button>
+                    <button id="scanNow" class="icon-button" title="Scan now">↻</button>
+                  </div>
+                </div>
+
+                <section id="codexOnboarding" class="codex-onboarding" hidden>
+                  <div class="codex-auth-panel">
+                    <span id="setupSummary" class="setup-summary" hidden>Checking</span>
+                    <div class="auth-brand" aria-label="WDIM">
+                      <img src="./wdim-icon.png" alt="" aria-hidden="true" />
+                      <span>WDIM</span>
+                    </div>
+                    <div>
+                      <h2 id="codexOnboardingTitle">Check Codex</h2>
+                      <p id="codexOnboardingDetail">Codex app-server is not reachable yet.</p>
+                    </div>
+                    <div class="codex-onboarding-actions">
+                      <button id="copyCodexSignIn" type="button">Sign in with ChatGPT</button>
+                    </div>
+                    <strong id="codexStatus" class="codex-auth-status" hidden>Local app-server</strong>
+                  </div>
+                  <div id="setupChecklist" class="setup-checklist"></div>
+                  <div class="setup-actions">
+                    <button id="runSetupCheck" type="button">Check setup</button>
+                  </div>
+                  <div id="setupCheckResult" class="setup-check-result" hidden></div>
+                </section>
+
+                <nav class="source-overview" id="sourceOverview" aria-label="Filter important items by source"></nav>
+                <section id="sourceInsightPanel" class="source-insight-panel" hidden></section>
+
+                <section class="important-panel">
+                  <div id="findings" class="findings"></div>
+                </section>
+              </div>
+
+              <aside class="scan-history-column" id="scanHistoryColumn" aria-label="Recent scans" hidden>
+                <div class="history-column-header">
+                  <h2>Recent scans</h2>
+                  <div class="history-header-actions">
+                    <label class="scan-cadence-menu">
+                      <span>Run</span>
+                      <select id="scanInterval">
+                        <option value="30">Every 30 minutes</option>
+                        <option value="60">Every hour</option>
+                        <option value="120">Every 2 hours</option>
+                        <option value="240">Every 4 hours</option>
+                        <option value="1440">Every 24 hours</option>
+                      </select>
+                    </label>
+                    <button id="closeScanHistory" class="plain-icon-button" type="button" title="Close recent scans" aria-label="Close recent scans">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+                <div id="recentScans" class="scan-history"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="app-view" id="integrationsView">
+            <div class="settings-header">
+              <div>
+                <h1>Sources</h1>
+                <p>Add public sources or connect private accounts for catch-up scans.</p>
+              </div>
+              <button id="addIntegration" class="primary add-integration-button" type="button">Add source</button>
+            </div>
+
+            <div class="integrations-workspace" id="integrationsWorkspace">
+              <section class="integration-catalog" aria-label="Connected sources">
+                <div class="integration-tabs" id="integrationTabs" hidden>
+                  <button type="button" data-integration-tab="connected">Connected</button>
+                  <button type="button" data-integration-tab="all">All</button>
+                </div>
+
+                <div class="integration-search">
+                  <span aria-hidden="true"></span>
+                  <input id="integrationSearch" type="search" placeholder="Search sources" />
+                </div>
+
+                <div class="integration-table">
+                  <div class="integration-table-head" id="integrationTableHead">
+                    <span>Name</span>
+                    <span>Connections</span>
+                  </div>
+                  <div id="integrationRows" class="integration-rows"></div>
+                </div>
+              </section>
+
+              <section class="integration-detail" aria-label="Source details" hidden>
+                <div class="integration-detail-head">
+                  <div class="integration-detail-title">
+                    <button id="integrationBack" class="back-button" type="button">Back</button>
+                    <span id="integrationDetailIcon" class="integration-service-icon" aria-hidden="true"></span>
+                    <div>
+                      <h2 id="integrationDetailTitle">Source</h2>
+                      <p id="integrationDetailMeta"></p>
+                    </div>
+                  </div>
+                  <div class="integration-detail-actions">
+                    <strong id="integrationDetailStatus" class="source-status"></strong>
+                  </div>
+                </div>
+
+                <div class="integration-detail-panel active" data-integration-detail="gmail">
+                  <div class="section-title compact-title integration-panel-title">
+                    <div>
+                      <h2>Gmail inboxes</h2>
+                      <p>Connect the inboxes wdim should monitor.</p>
+                    </div>
+                    <button id="connectGmail" class="primary" type="button">Add email</button>
+                  </div>
+                  <div id="accounts" class="accounts"></div>
+                </div>
+
+                <div class="integration-detail-panel" data-integration-detail="youtube">
+                  <div class="section-title compact-title integration-panel-title">
+                    <div>
+                      <h2>YouTube</h2>
+                      <p>Monitor channels or paste a single video URL for a one-off summary.</p>
+                    </div>
+                  </div>
+                  <form id="youtubeChannelForm" class="source-url-form">
+                    <input id="youtubeChannelUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+                    <button id="addYoutubeChannel" type="submit">Add source</button>
+                  </form>
+                  <div id="youtubeConnections" class="accounts"></div>
+                </div>
+
+                <div class="integration-detail-panel" data-integration-detail="twitter">
+                  <div class="section-title compact-title integration-panel-title">
+                    <div>
+                      <h2>X / Twitter timeline</h2>
+                      <p>Reads your For You feed using your existing x.com browser login — no API keys. Log into x.com in Chrome first.</p>
+                    </div>
+                    <button id="connectTwitter" class="primary" type="button">Connect X</button>
+                  </div>
+                  <div id="twitterConnections" class="accounts"></div>
+                </div>
+
+                <div class="integration-detail-panel" data-integration-detail="telegram">
+                  <div class="section-title compact-title integration-panel-title">
+                    <div>
+                      <h2>Telegram sources</h2>
+                      <p>Choose direct messages separately from groups and channels.</p>
+                    </div>
+                    <div class="integration-panel-actions">
+                      <button id="chooseTelegramExport" class="primary" type="button">Refresh chats</button>
+                    </div>
+                  </div>
+                  <div id="telegramChats" class="telegram-chats"></div>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <div class="hidden-controls" hidden>
+              <strong id="nextScan">Not scheduled</strong>
+              <strong id="telegramStatus">Not connected</strong>
+              <div id="staleScanBanner" class="stale-banner" hidden></div>
+              <div id="errorBanner" class="error-banner" hidden></div>
+              <button id="clearScanMemory" type="button">Reset scan memory</button>
+              <input id="launchAtLogin" type="checkbox" />
+              <input id="quietHoursEnabled" type="checkbox" />
+              <input id="quietHoursStart" type="time" value="22:00" />
+              <input id="quietHoursEnd" type="time" value="07:00" />
+              <button id="copyDiagnostics" type="button">Copy diagnostics</button>
+              <button id="copyLiveCheck" type="button">Copy live check</button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="./renderer.js"></script>
+  </body>
+</html>

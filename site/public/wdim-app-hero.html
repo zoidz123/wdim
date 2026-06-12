@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>wdim app hero capture</title>
+    <link rel="stylesheet" href="../../desktop/src/renderer/styles.css" />
+    <style>
+      html,
+      body {
+        width: 1440px;
+        height: 900px;
+      }
+
+      body {
+        background: #0d100d;
+      }
+
+      .capture-window-controls {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        z-index: 50;
+        display: flex;
+        gap: 10px;
+        pointer-events: none;
+      }
+
+      .capture-window-controls span {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+      }
+
+      .capture-window-controls span:nth-child(1) {
+        background: #ff5f57;
+      }
+
+      .capture-window-controls span:nth-child(2) {
+        background: #febc2e;
+      }
+
+      .capture-window-controls span:nth-child(3) {
+        background: #28c840;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="capture-window-controls" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <header class="top" aria-label="Window controls area">
+        <button class="chrome-sidebar-toggle active" type="button" title="Hide sidebar" aria-label="Hide sidebar">
+          <span aria-hidden="true"></span>
+        </button>
+        <div class="top-drag-region" aria-hidden="true"></div>
+      </header>
+
+      <div class="workspace">
+        <aside class="side-rail">
+          <nav class="rail-nav" aria-label="App sections">
+            <button class="rail-item active" type="button">
+              <span class="rail-icon rail-icon-home" aria-hidden="true"></span>
+              <span class="rail-label">Home</span>
+            </button>
+            <button class="rail-item" type="button">
+              <span class="rail-icon rail-icon-integrations" aria-hidden="true"></span>
+              <span class="rail-label">Sources</span>
+            </button>
+          </nav>
+        </aside>
+
+        <section class="content-shell">
+          <section class="app-view active">
+            <div class="home-layout">
+              <div class="home-main">
+                <div class="content-toolbar">
+                  <div>
+                    <strong id="status">Found 18 items</strong>
+                  </div>
+                  <div class="toolbar-actions">
+                    <button class="last-scan-link" type="button">
+                      <span>Last scanned 8m ago</span>
+                    </button>
+                    <button class="icon-button" title="Scan now">↻</button>
+                  </div>
+                </div>
+
+                <nav class="source-overview" aria-label="Filter important items by source">
+                  <button class="source-overview-tile active" type="button">
+                    <span class="source-overview-icon">∑</span>
+                    <span class="source-overview-name">All</span>
+                    <span class="source-overview-count neutral">18 items</span>
+                  </button>
+                  <button class="source-overview-tile" type="button">
+                    <span class="source-overview-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 6.5h15A1.5 1.5 0 0 1 21 8v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16V8a1.5 1.5 0 0 1 1.5-1.5Zm.6 1.7 6.5 4.5c.2.1.5.1.7 0l6.5-4.5H5.1Zm14.2 1.3-6 4.1a2.2 2.2 0 0 1-2.6 0l-6-4.1V16c0 .2.1.3.3.3h14c.2 0 .3-.1.3-.3V9.5Z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="source-overview-name">Gmail</span>
+                    <span class="source-overview-count positive">+3 important</span>
+                  </button>
+                  <button class="source-overview-tile" type="button">
+                    <span class="source-overview-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.7 4.4 3.8 10.9c-1.1.4-1.1 1.1-.2 1.4l4.3 1.3 1.7 5.2c.2.6.3.8.7.8.3 0 .5-.1.8-.4l2.4-2.3 4.9 3.6c.9.5 1.5.2 1.7-.8l3.1-14.4c.3-1.2-.5-1.7-1.5-1.3Zm-12 8.9 9.7-6.1c.5-.3.9-.1.5.2l-8.3 7.5-.3 3.2-1.6-4.8Z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="source-overview-name">Telegram</span>
+                    <span class="source-overview-count positive">+5 signals</span>
+                  </button>
+                  <button class="source-overview-tile" type="button">
+                    <span class="source-overview-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 7.1a3 3 0 0 0-2.1-2.1C17.5 4.5 12 4.5 12 4.5s-5.5 0-7.3.5a3 3 0 0 0-2.1 2.1A31 31 0 0 0 2 12a31 31 0 0 0 .6 4.9 3 3 0 0 0 2.1 2.1c1.8.5 7.3.5 7.3.5s5.5 0 7.3-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.6-4.9ZM10 15.3V8.7l5.7 3.3L10 15.3Z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="source-overview-name">YouTube</span>
+                    <span class="source-overview-count positive">+2 videos</span>
+                  </button>
+                  <button class="source-overview-tile" type="button">
+                    <span class="source-overview-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.1 18.9c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-4.8 0-1.1.4-2 1.1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.6 9.6 0 0 1 5.2 0c2-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7.7.7 1.1 1.6 1.1 2.7 0 3.7-2.3 4.5-4.6 4.8.4.3.8 1 .8 2v3c0 .3.2.6.7.5A9.7 9.7 0 0 0 12 2.3Z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="source-overview-name">GitHub</span>
+                    <span class="source-overview-count urgent">1 item</span>
+                  </button>
+                  <button class="source-overview-tile" type="button">
+                    <span class="source-overview-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.1 3.5h4.7l3.4 4.8 4.2-4.8h1.8l-5.2 6 5.8 8.1h-4.7l-3.7-5.2-4.5 5.2H5.1l5.5-6.4-5.5-7.7Zm2.8 1.4 8 11.3h1.1L9 4.9H7.9Z" fill="currentColor"/></svg>
+                    </span>
+                    <span class="source-overview-name">X</span>
+                    <span class="source-overview-count positive">+9 posts</span>
+                  </button>
+                </nav>
+
+                <section class="important-panel">
+                  <div class="findings">
+                    <article class="finding">
+                      <span class="finding-dot low" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="Gmail">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 6.5h15A1.5 1.5 0 0 1 21 8v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16V8a1.5 1.5 0 0 1 1.5-1.5Zm.6 1.7 6.5 4.5c.2.1.5.1.7 0l6.5-4.5H5.1Zm14.2 1.3-6 4.1a2.2 2.2 0 0 1-2.6 0l-6-4.1V16c0 .2.1.3.3.3h14c.2 0 .3-.1.3-.3V9.5Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>Vendor renewal needs approval</h3><p>billing@example · Jun 6, 9:12 AM</p></div></div>
+                        <p class="finding-summary">The renewal quote expires tomorrow and asks whether the team wants annual or month-to-month coverage.</p>
+                        <p class="action-line"><strong>Action</strong><span>Confirm owner and approve or decline before the deadline.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open email</button><button class="review-button">✓</button></div>
+                    </article>
+
+                    <article class="finding">
+                      <span class="finding-dot medium" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="Telegram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.7 4.4 3.8 10.9c-1.1.4-1.1 1.1-.2 1.4l4.3 1.3 1.7 5.2c.2.6.3.8.7.8.3 0 .5-.1.8-.4l2.4-2.3 4.9 3.6c.9.5 1.5.2 1.7-.8l3.1-14.4c.3-1.2-.5-1.7-1.5-1.3Zm-12 8.9 9.7-6.1c.5-.3.9-.1.5.2l-8.3 7.5-.3 3.2-1.6-4.8Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>Partner timeline was bumped for follow-up</h3><p>Partner projects · Jun 6, 8:43 AM</p></div></div>
+                        <p class="finding-summary">A collaborator asked for updated timelines and mentioned they are blocked until the next product spec is shared.</p>
+                        <p class="action-line"><strong>Action</strong><span>Send the latest launch notes or assign a teammate to respond.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open Telegram</button><button class="review-button">✓</button></div>
+                    </article>
+
+                    <article class="finding">
+                      <span class="finding-dot high" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="X">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.1 3.5h4.7l3.4 4.8 4.2-4.8h1.8l-5.2 6 5.8 8.1h-4.7l-3.7-5.2-4.5 5.2H5.1l5.5-6.4-5.5-7.7Zm2.8 1.4 8 11.3h1.1L9 4.9H7.9Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>Launch thread is getting traction</h3><p>@growthlead · Jun 6, 8:04 AM</p></div></div>
+                        <p class="finding-summary">A high-signal X thread is discussing launch positioning and asks which examples best explain the product.</p>
+                        <p class="action-line"><strong>Action</strong><span>Read the thread and decide whether to reply or fold the framing into launch copy.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open X</button><button class="review-button">✓</button></div>
+                    </article>
+
+                    <article class="finding">
+                      <span class="finding-dot high" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="YouTube">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.4 7.1a3 3 0 0 0-2.1-2.1C17.5 4.5 12 4.5 12 4.5s-5.5 0-7.3.5a3 3 0 0 0-2.1 2.1A31 31 0 0 0 2 12a31 31 0 0 0 .6 4.9 3 3 0 0 0 2.1 2.1c1.8.5 7.3.5 7.3.5s5.5 0 7.3-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.6-4.9ZM10 15.3V8.7l5.7 3.3L10 15.3Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>New channel briefing is worth watching</h3><p>YouTube · Jun 6, 8:17 AM</p></div></div>
+                        <p class="finding-summary">A monitored channel posted a product strategy breakdown with two sections relevant to launch positioning.</p>
+                        <p class="action-line"><strong>Action</strong><span>Queue the video or skim the transcript before the launch copy pass.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open video</button><button class="review-button">✓</button></div>
+                    </article>
+
+                    <article class="finding">
+                      <span class="finding-dot high" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.1 18.9c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-4.8 0-1.1.4-2 1.1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.6 9.6 0 0 1 5.2 0c2-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7.7.7 1.1 1.6 1.1 2.7 0 3.7-2.3 4.5-4.6 4.8.4.3.8 1 .8 2v3c0 .3.2.6.7.5A9.7 9.7 0 0 0 12 2.3Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>Review requested on release checklist</h3><p>acme/launch-app · Jun 6, 7:58 AM</p></div></div>
+                        <p class="finding-summary">A pull request has a security review comment asking for clarification before the branch can ship.</p>
+                        <p class="action-line"><strong>Action</strong><span>Review the comment and decide whether the change should be patched today.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open GitHub</button><button class="review-button">✓</button></div>
+                    </article>
+
+                    <article class="finding">
+                      <span class="finding-dot low" aria-hidden="true"></span>
+                      <div class="finding-icon" aria-label="X / Twitter">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.1 3.5h4.7l3.4 4.8 4.2-4.8h1.8l-5.2 6 5.8 8.1h-4.7l-3.7-5.2-4.5 5.2H5.1l5.5-6.4-5.5-7.7Zm2.8 1.4 8 11.3h1.1L9 4.9H7.9Z" fill="currentColor"/></svg>
+                      </div>
+                      <div class="finding-main">
+                        <div class="finding-header"><div class="finding-title-block"><h3>Market structure thread is gaining traction</h3><p>@marketwatcher · Jun 6, 7:21 AM</p></div></div>
+                        <p class="finding-summary">A concise thread compares liquidity conditions across venues and flags two charts that may affect your watchlist.</p>
+                        <p class="action-line"><strong>Action</strong><span>Skim if you are making allocation or research decisions today.</span></p>
+                      </div>
+                      <div class="finding-actions"><button class="link-button finding-source-button">Open post</button><button class="review-button">✓</button></div>
+                    </article>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

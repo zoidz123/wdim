@@ -1,0 +1,681 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  color-scheme: dark;
+  --font-brand: "Instrument Serif", serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bg: #fffdf8;
+  --panel: #fbfff7;
+  --panel-2: #f2f8ee;
+  --line: #dce7dc;
+  --text: #071109;
+  --muted: #536053;
+  --quiet: #7c867b;
+  --green: #63d97f;
+  --green-soft: rgba(99, 217, 127, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 50% 76%, rgba(99, 217, 127, 0.16), transparent 26%),
+    radial-gradient(circle at 8% 76%, rgba(200, 229, 206, 0.48), transparent 25%),
+    radial-gradient(circle at 92% 80%, rgba(244, 236, 196, 0.62), transparent 26%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.nav,
+.hero,
+.supportedApps,
+.section,
+.privacyBand {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 10px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-brand);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.brand img {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(153, 247, 181, 0.5);
+  border-radius: 999px;
+  background: var(--green-soft);
+  color: #071109;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.button.secondary {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 34px;
+  padding: 62px 0 30px;
+  text-align: center;
+}
+
+.sectionKicker {
+  margin: 0;
+  color: #2e9b4c;
+  font-size: 13px;
+  font-weight: 850;
+  text-transform: none;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 920px;
+  margin: 0 auto 16px;
+  font-family: var(--font-brand);
+  font-size: clamp(76px, 11vw, 160px);
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.lede {
+  max-width: 600px;
+  margin-inline: auto;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.heroActions {
+  justify-content: center;
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.availabilityNote {
+  margin: 12px 0 0;
+  color: var(--quiet);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.heroImage {
+  width: min(1080px, 100%);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(7, 17, 9, 0.15);
+  border-radius: 20px;
+  background: #0b0f0b;
+  box-shadow: 0 34px 90px rgba(10, 31, 14, 0.16);
+}
+
+.heroImage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.supportedApps {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 10px 0 46px;
+}
+
+.supportedLabel {
+  margin: 0;
+  color: #5e6a5e;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.appBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.appBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.64);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 10px 32px rgba(10, 31, 14, 0.05);
+}
+
+.appBadge span {
+  display: grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 17, 9, 0.09);
+}
+
+.appBadge img {
+  display: block;
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.section {
+  padding: 54px 0 80px;
+  border-top: 1px solid var(--line);
+}
+
+.section.compact {
+  padding-top: 52px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.step {
+  min-height: 188px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.step span {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.step p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.step h3 {
+  margin: 18px 0 0;
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.privacyBand {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  gap: 28px;
+  align-items: center;
+  padding: 24px 0 56px;
+  border-top: 1px solid var(--line);
+}
+
+.privacyBand h2 {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(34px, 4.6vw, 58px);
+  font-weight: 400;
+  line-height: 0.94;
+}
+
+.privacyBand p {
+  max-width: 560px;
+  margin: 0;
+  padding-left: 28px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.sectionHeader.center {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.sectionHeader h2 {
+  max-width: 720px;
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(44px, 6vw, 78px);
+  font-weight: 400;
+  line-height: 0.96;
+  text-transform: none;
+}
+
+.sectionHeader p:not(.sectionKicker) {
+  max-width: 560px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+@media (max-width: 920px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 44px;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .privacyBand {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .privacyBand p {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+}
+
+@media (max-width: 560px) {
+  .nav,
+  .hero,
+  .supportedApps,
+  .section,
+  .privacyBand {
+    width: min(100% - 28px, 1120px);
+  }
+
+  h1 {
+    font-size: 68px;
+  }
+
+  .lede {
+    font-size: 17px;
+  }
+}
+
+.directionsPage {
+  min-height: 100vh;
+  background: #f7faf3;
+  color: #0b140d;
+  font-family: var(--font-body);
+}
+
+.directionsNav,
+.directionsIntro,
+.directionStack {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.directionsNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+}
+
+.directionsNav a:last-child {
+  color: #465347;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.directionsIntro {
+  padding: 62px 0 34px;
+}
+
+.directionsIntro h1 {
+  max-width: 900px;
+  margin: 8px 0 14px;
+  color: #061008;
+  font-size: clamp(48px, 7vw, 92px);
+}
+
+.directionsIntro p:not(.sectionKicker) {
+  max-width: 720px;
+  color: #5a655b;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.directionStack {
+  display: grid;
+  gap: 28px;
+  padding: 28px 0 88px;
+}
+
+.direction {
+  overflow: hidden;
+  min-height: 620px;
+  border: 1px solid rgba(14, 28, 17, 0.14);
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.directionMeta {
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(14, 28, 17, 0.12);
+  color: rgba(6, 16, 8, 0.58);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.directionHero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+  gap: 52px;
+  align-items: center;
+  min-height: 560px;
+  padding: 58px;
+}
+
+.directionCopy p {
+  margin: 0 0 14px;
+  color: #2f9c51;
+  font-size: 13px;
+  font-weight: 850;
+  text-transform: lowercase;
+}
+
+.directionCopy h2 {
+  margin: 0;
+  color: #071109;
+  font-size: clamp(46px, 6vw, 84px);
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+
+.directionCopy span {
+  display: block;
+  max-width: 560px;
+  margin-top: 22px;
+  color: #536053;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.directionCopy button {
+  min-height: 46px;
+  margin-top: 30px;
+  padding: 0 20px;
+  border: 1px solid #1f6e39;
+  border-radius: 10px;
+  background: #65d27e;
+  color: #071109;
+  font: inherit;
+  font-weight: 850;
+}
+
+.directionMockup {
+  overflow: hidden;
+  border: 1px solid rgba(8, 23, 12, 0.16);
+  border-radius: 20px;
+  background: #0c110d;
+  color: #f7fbf2;
+  box-shadow: 0 28px 80px rgba(10, 31, 14, 0.18);
+}
+
+.mockupTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mockupTop strong {
+  font-size: 15px;
+}
+
+.mockupTop span {
+  color: rgba(247, 251, 242, 0.52);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.mockupSources {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mockupSources div {
+  min-height: 78px;
+  padding: 14px 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mockupSources div:last-child {
+  border-right: 0;
+}
+
+.mockupSources span,
+.directionMockup article span {
+  display: block;
+  color: rgba(247, 251, 242, 0.48);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.mockupSources strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--green);
+  font-size: 24px;
+}
+
+.directionMockup article {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.directionMockup article:last-child {
+  border-bottom: 0;
+}
+
+.directionMockup h3 {
+  margin: 6px 0 8px;
+  font-size: 20px;
+}
+
+.directionMockup p {
+  margin: 0;
+  color: rgba(247, 251, 242, 0.68);
+  line-height: 1.45;
+}
+
+.directionEditorial {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 78%, rgba(153, 247, 181, 0.14), transparent 30%),
+    #fffdf8;
+}
+
+.directionEditorial::after {
+  content: "";
+  position: absolute;
+  right: 9%;
+  bottom: 54px;
+  left: 9%;
+  height: 150px;
+  border-radius: 50%;
+  background:
+    linear-gradient(110deg, transparent 0 14%, rgba(153, 247, 181, 0.28) 22%, transparent 33% 42%, rgba(236, 207, 97, 0.34) 52%, transparent 66%);
+  filter: blur(10px);
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.directionEditorial .directionHero {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+}
+
+.directionEditorial .directionCopy h2 {
+  max-width: 900px;
+  font-family: var(--font-brand);
+  font-size: clamp(68px, 8vw, 118px);
+  font-weight: 400;
+  line-height: 0.86;
+  text-transform: none;
+}
+
+.directionEditorial .directionMockup {
+  width: min(720px, 100%);
+}
+
+.directionStudio {
+  background:
+    linear-gradient(#f1e9ff, #fbf8f1 38%, #f1e9ff);
+}
+
+.directionStudio .directionHero {
+  align-items: stretch;
+}
+
+.directionStudio .directionCopy,
+.directionStudio .directionMockup {
+  border: 2px solid #171b16;
+  border-radius: 22px;
+  background: #fffdf9;
+  box-shadow: 6px 8px 0 rgba(23, 27, 22, 0.12);
+}
+
+.directionStudio .directionCopy {
+  padding: 30px;
+}
+
+.directionStudio .directionCopy h2 {
+  font-size: clamp(44px, 5vw, 68px);
+}
+
+.directionStudio .directionCopy span::after {
+  content: "Gmail";
+  display: inline-flex;
+  margin: 24px 8px 0 0;
+  padding: 5px 12px;
+  border: 2px solid #171b16;
+  border-radius: 999px;
+  background: #99f7b5;
+  color: #101510;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.directionStudio .directionCopy button {
+  border: 2px solid #171b16;
+  box-shadow: 3px 4px 0 #171b16;
+}
+
+.directionCommand {
+  border-color: #1c281f;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(153, 247, 181, 0.12), transparent 25%),
+    #060806;
+  color: #f7fbf2;
+}
+
+.directionCommand .directionMeta {
+  border-color: #1c281f;
+  color: rgba(247, 251, 242, 0.52);
+}
+
+.directionCommand .directionCopy h2 {
+  color: #f7fbf2;
+}
+
+.directionCommand .directionCopy span {
+  color: rgba(247, 251, 242, 0.62);
+}
+
+.directionCommand .directionMockup {
+  border-color: #29362d;
+  background: #0d110e;
+}
+
+@media (max-width: 880px) {
+  .directionHero {
+    grid-template-columns: 1fr;
+    padding: 34px;
+  }
+}

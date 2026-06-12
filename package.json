@@ -1,0 +1,20 @@
+{
+  "name": "what-did-i-miss-lab",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "desktop",
+    "shared",
+    "site"
+  ],
+  "scripts": {
+    "changeset": "changeset",
+    "version:packages": "changeset version",
+    "release:desktop": "bun run --cwd desktop dist:signed",
+    "test": "bun run --filter '*' test",
+    "typecheck": "bun run --filter '*' typecheck"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0"
+  }
+}
