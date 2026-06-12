@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export const alt = "What did I miss?";
 export const size = {
@@ -7,7 +9,13 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export default function Image() {
+export default async function Image() {
+  const [brandFont, icon] = await Promise.all([
+    readFile(path.join(process.cwd(), "public/fonts/instrument-serif-regular.ttf")),
+    readFile(path.join(process.cwd(), "public/wdim-icon.png"))
+  ]);
+  const iconSrc = `data:image/png;base64,${icon.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -47,16 +55,18 @@ export default function Image() {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            fontFamily: "Georgia, serif",
+            fontFamily: "Instrument Serif",
             fontSize: 38
           }}
         >
-          <div
+          <img
+            src={iconSrc}
+            alt=""
             style={{
               width: 34,
               height: 34,
               borderRadius: 9,
-              background: "#071109"
+              objectFit: "cover"
             }}
           />
           <span>wdim</span>
@@ -68,7 +78,7 @@ export default function Image() {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            fontFamily: "Georgia, serif",
+            fontFamily: "Instrument Serif",
             fontSize: 134,
             fontWeight: 400,
             letterSpacing: 0,
@@ -79,6 +89,16 @@ export default function Image() {
         </div>
       </div>
     ),
-    size
+    {
+      ...size,
+      fonts: [
+        {
+          name: "Instrument Serif",
+          data: brandFont,
+          style: "normal",
+          weight: 400
+        }
+      ]
+    }
   );
 }
