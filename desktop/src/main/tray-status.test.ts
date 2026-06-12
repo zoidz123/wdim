@@ -19,6 +19,13 @@ describe("tray status", () => {
     expect(trayStatusLabel(state({ isScanning: true }))).toBe("Status: scanning sources");
   });
 
+  test("shows the live scan step while scanning when progress is available", () => {
+    expect(trayStatusLabel(state({
+      isScanning: true,
+      scanProgress: { label: "Summarizing video 2/7: All-In Podcast", startedAt: "2026-06-12T17:00:00.000Z" }
+    }))).toBe("Status: Summarizing video 2/7: All-In Podcast");
+  });
+
   test("disables manual tray scan while scanning", () => {
     expect(trayScanNowItem(state({ isScanning: true }))).toEqual({ label: "Scanning...", enabled: false });
     expect(trayScanNowItem(state({ isScanning: false }))).toEqual({ label: "Scan Now", enabled: true });
@@ -64,6 +71,7 @@ function state(overrides: Partial<AppState> & { gmailCredentialsPath?: string | 
     telegramChats: overrides.telegramChats ?? [],
     codexReady: overrides.codexReady ?? true,
     isScanning: overrides.isScanning ?? false,
+    scanProgress: overrides.scanProgress ?? null,
     nextScanAt: overrides.nextScanAt === undefined ? "2026-06-02T13:00:00.000Z" : overrides.nextScanAt,
     lastScan: null,
     lastCompletedScan: null,

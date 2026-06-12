@@ -1,5 +1,11 @@
 # what-did-i-miss-desktop
 
+## 0.1.7
+
+### Patch Changes
+
+- Live scan progress. Long scans now show the agent's current step ("Reading your sources", "Summarizing video 3/7: ...", "Writing X / Twitter briefing") with elapsed time in the status bar and tray, instead of a static "Scanning..." for minutes.
+
 ## 0.1.6
 
 ### Patch Changes

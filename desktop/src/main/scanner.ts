@@ -43,6 +43,7 @@ type ConnectorScanResult = {
 export class ScanService {
   private timer: NodeJS.Timeout | null = null;
   private isScanning = false;
+  private scanProgress: AppState["scanProgress"] = null;
   private activeScan: Promise<ScanResult> | null = null;
   private codexReady = false;
   private codexStatus: CodexReadinessStatus = {
@@ -108,7 +109,7 @@ export class ScanService {
   private async runYouTubeVideoConnectionScan(connectionId: string): Promise<ScanResult> {
     this.isScanning = true;
     this.lastError = null;
-    await this.emit();
+    await this.setScanProgress("Fetching video details");
 
     const startedAt = new Date().toISOString();
     try {
@@ -173,6 +174,7 @@ export class ScanService {
       return result;
     } finally {
       this.isScanning = false;
+      this.clearScanProgress();
       await this.scheduleNextScan();
       await this.emit();
     }
@@ -181,7 +183,7 @@ export class ScanService {
   private async runScanNow(): Promise<ScanResult> {
     this.isScanning = true;
     this.lastError = null;
-    await this.emit();
+    await this.setScanProgress("Checking sources");
 
     const startedAt = new Date().toISOString();
     let failedAccountErrors: AccountScanError[] | undefined;
@@ -216,6 +218,7 @@ export class ScanService {
         failedAccountErrors = accountErrors;
         throw new Error(`All Gmail inboxes failed to scan. ${accountErrors[0]?.accountEmail}: ${accountErrors[0]?.error}`);
       }
+      await this.setScanProgress("Reading your sources");
       let telegramMessages: NonNullable<RawEvents["telegram"]> = [];
       if (telegramReady) {
         const fetchedTelegramMessages = await this.telegram.fetchRecentMessages({
@@ -297,6 +300,7 @@ export class ScanService {
       const triageRawEvents = digestOnly ? {} : withoutYouTubeEvents(preparedRawEvents);
       const triageGroups = digestOnly ? [] : groupEvents(triageRawEvents);
       const triagePlan = digestOnly ? scanPlan : planGroupedScan(triageGroups);
+      if (!digestOnly && triageGroups.length) await this.setScanProgress("Analyzing messages");
       const triageResult = !digestOnly && triageGroups.length
         ? await this.runPlannedTriage(triageGroups, triagePlan, triageRawEvents)
         : emptyPlannedTriageResult(automaticYouTubeFindings);
@@ -360,6 +364,7 @@ export class ScanService {
       return result;
     } finally {
       this.isScanning = false;
+      this.clearScanProgress();
       await this.scheduleNextScan();
       await this.emit();
     }
@@ -385,6 +390,7 @@ export class ScanService {
       codexReady: this.codexReady,
       codexStatus: this.codexStatus,
       isScanning: this.isScanning,
+      scanProgress: this.scanProgress,
       nextScanAt: this.nextScanAt,
       lastScan: stateScan(await this.store.getLastScan()),
       lastCompletedScan: stateScan(await this.store.getLastCompletedScan()),
@@ -840,11 +846,14 @@ export class ScanService {
       };
     }
 
+    const summarizable = youtubeEvents.filter((event) => event.transcript?.trim());
     const prepared: NonNullable<RawEvents["youtube"]> = [];
-    for (const event of youtubeEvents) {
+    for (const [index, event] of summarizable.entries()) {
       const transcript = event.transcript?.trim() ?? "";
-      if (!transcript) continue;
 
+      await this.setScanProgress(summarizable.length > 1
+        ? `Summarizing video ${index + 1}/${summarizable.length}: ${truncateText(event.title, 60)}`
+        : `Summarizing: ${truncateText(event.title, 60)}`);
       let youtubeSummary: { summary: string; anchors: YouTubeSummaryAnchor[] };
       try {
         youtubeSummary = normalizeYouTubeTranscriptSummary(
@@ -1038,6 +1047,7 @@ export class ScanService {
     for (const { source, events } of sources) {
       if (!events.length) continue;
       try {
+        await this.setScanProgress(`Writing ${sourceDisplayName(source)} briefing (${events.length} item${events.length === 1 ? "" : "s"} read)`);
         const raw = await this.codex.generateDigest(source, events, window);
         const { bullets, skippedSummary } = parseDigestResponse(raw);
         const enrichedBullets = enrichDigestBullets(source, bullets, events);
@@ -1151,6 +1161,21 @@ export class ScanService {
       sourceMessageKey("youtube", `youtube:${videoId}`),
       sourceMessageKey("youtube", videoId)
     ]);
+  }
+
+  // Long scans (transcript summaries, briefing writes) used to sit behind a
+  // static "Scanning..." for minutes. Each checkpoint pushes a fresh label so
+  // the UI can show the agent's actual current step.
+  private async setScanProgress(label: string): Promise<void> {
+    this.scanProgress = {
+      label,
+      startedAt: this.scanProgress?.startedAt ?? new Date().toISOString()
+    };
+    await this.emit();
+  }
+
+  private clearScanProgress(): void {
+    this.scanProgress = null;
   }
 
   private async emit(): Promise<void> {

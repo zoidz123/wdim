@@ -125,6 +125,7 @@ export type AppState = {
   codexReady: boolean;
   codexStatus?: CodexReadinessStatus;
   isScanning: boolean;
+  scanProgress?: { label: string; startedAt: string } | null;
   nextScanAt: string | null;
   lastScan: ScanResult | null;
   lastCompletedScan: ScanResult | null;

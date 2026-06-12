@@ -1,7 +1,7 @@
 import type { AppState } from "./types";
 
 export function trayStatusLabel(state: AppState, now: () => Date = () => new Date()): string {
-  if (state.isScanning) return "Status: scanning sources";
+  if (state.isScanning) return `Status: ${state.scanProgress?.label ?? "scanning sources"}`;
   if (!state.codexReady) return "Status: Codex sign-in needed";
   if (!hasAnySource(state)) return "Status: connect a source";
   if (!state.nextScanAt) return "Status: hourly scan not scheduled";

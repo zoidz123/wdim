@@ -2420,9 +2420,31 @@ async function runAction(message, action) {
 
 function statusText(state) {
   return state.isScanning
-    ? "Scanning..."
+    ? scanProgressText(state)
     : homeCountText(state);
 }
+
+// "Summarizing video 3/7: ... · 2m 41s" — live agent step plus elapsed time, so
+// multi-minute scans read as working instead of frozen.
+function scanProgressText(state) {
+  const label = state.scanProgress?.label || "Scanning";
+  const elapsed = scanElapsedText(state.scanProgress?.startedAt);
+  return elapsed ? `${label}... · ${elapsed}` : `${label}...`;
+}
+
+function scanElapsedText(startedAt) {
+  const startedMs = Date.parse(startedAt ?? "");
+  if (!Number.isFinite(startedMs)) return "";
+  const totalSeconds = Math.max(0, Math.floor((Date.now() - startedMs) / 1000));
+  if (totalSeconds < 60) return `${totalSeconds}s`;
+  return `${Math.floor(totalSeconds / 60)}m ${totalSeconds % 60}s`;
+}
+
+// Keep the elapsed counter ticking between progress events.
+setInterval(() => {
+  if (!currentState?.isScanning) return;
+  elements.status.textContent = scanProgressText(currentState);
+}, 1000);
 
 function resetGmailConnectState() {
   if (!gmailConnectBusy) return;
