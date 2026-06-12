@@ -1,5 +1,11 @@
 # what-did-i-miss-desktop
 
+## 0.1.4
+
+### Patch Changes
+
+- Show recent unreviewed digest cards from the catch-up window instead of only the latest scan.
+
 ## 0.1.3
 
 ### Patch Changes
