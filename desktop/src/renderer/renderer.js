@@ -1,6 +1,7 @@
 import { codexOnboardingState, localContentVisibilityState, scanNowControlState } from "./control-state.js";
 
 const api = window.whatDidIMiss;
+const DIGEST_CARD_LOOKBACK_MS = 24 * 60 * 60 * 1000;
 
 const elements = {
   status: document.getElementById("status"),
@@ -1376,7 +1377,11 @@ function completedRecentScans(state) {
     seen.add(id);
     scans.push(scan);
   }
-  return scans.sort((a, b) => scanTimeMs(b) - scanTimeMs(a));
+  const newestMs = Math.max(0, ...scans.map(scanTimeMs));
+  const cutoffMs = newestMs ? newestMs - DIGEST_CARD_LOOKBACK_MS : 0;
+  return scans
+    .filter((scan) => scanTimeMs(scan) >= cutoffMs)
+    .sort((a, b) => scanTimeMs(b) - scanTimeMs(a));
 }
 
 function scanTimeMs(scan) {
