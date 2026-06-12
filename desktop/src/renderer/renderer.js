@@ -342,6 +342,33 @@ for (const element of [elements.quietHoursStart, elements.quietHoursEnd]) {
 api.onStateChanged(render);
 refresh();
 
+const updateNowButton = document.getElementById("updateNow");
+updateNowButton?.addEventListener("click", async () => {
+  updateNowButton.disabled = true;
+  updateNowButton.textContent = "Restarting...";
+  try {
+    await api.installUpdate();
+  } catch {
+    updateNowButton.disabled = false;
+    updateNowButton.textContent = "Update now";
+  }
+});
+api.onUpdateStatusChanged?.(applyUpdateStatus);
+void api.getUpdateStatus?.().then(applyUpdateStatus).catch(() => {});
+
+function applyUpdateStatus(status) {
+  if (!updateNowButton) return;
+  const ready = status?.state === "ready";
+  if (ready && updateNowButton.hidden) {
+    updateNowButton.disabled = false;
+    updateNowButton.textContent = "Update now";
+    updateNowButton.title = status.version
+      ? `Update to ${status.version} and restart wdim`
+      : "Install the downloaded update and restart wdim";
+  }
+  updateNowButton.hidden = !ready;
+}
+
 async function refresh() {
   render(await api.getState());
 }

@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { TelegramAuthState } from "../main/telegram";
+import type { UpdateStatus } from "../main/updater";
 import type { AppDiagnostics, AppSettings, AppState, ScanResult, SetupCheckResult } from "../main/types";
 
 type TelegramAuthResponse = {
@@ -62,6 +63,13 @@ const api = {
     const listener = (_event: unknown, state: AppState) => callback(state);
     ipcRenderer.on("app:stateChanged", listener);
     return () => ipcRenderer.off("app:stateChanged", listener);
+  },
+  getUpdateStatus: () => ipcRenderer.invoke("app:getUpdateStatus") as Promise<UpdateStatus>,
+  installUpdate: () => ipcRenderer.invoke("app:installUpdate") as Promise<void>,
+  onUpdateStatusChanged: (callback: (status: UpdateStatus) => void) => {
+    const listener = (_event: unknown, status: UpdateStatus) => callback(status);
+    ipcRenderer.on("app:updateStatusChanged", listener);
+    return () => ipcRenderer.off("app:updateStatusChanged", listener);
   }
 };
 

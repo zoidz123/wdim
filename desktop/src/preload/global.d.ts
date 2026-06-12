@@ -46,6 +46,9 @@ declare global {
       setTelegramChatEnabled: (chatId: string, enabled: boolean) => Promise<AppState>;
       refreshTelegramChats: () => Promise<AppState>;
       onStateChanged: (callback: (state: AppState) => void) => () => void;
+      getUpdateStatus: () => Promise<import("../main/updater").UpdateStatus>;
+      installUpdate: () => Promise<void>;
+      onUpdateStatusChanged: (callback: (status: import("../main/updater").UpdateStatus) => void) => () => void;
     };
   }
 }

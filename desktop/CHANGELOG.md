@@ -1,5 +1,11 @@
 # what-did-i-miss-desktop
 
+## 0.1.5
+
+### Patch Changes
+
+- In-app auto-update. The app checks the download.wdim.app release feed on launch and every 4 hours, downloads updates in the background, and shows an "Update now" button in the toolbar when the new version is ready to install. Releases now build a zip alongside the DMG and publish latest-mac.yml; `bun run publish:r2` uploads all release artifacts in a safe order.
+
 ## 0.1.4
 
 ### Patch Changes

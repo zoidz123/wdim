@@ -26,6 +26,7 @@ import { shouldDeferPopoverUntilReady, shouldHidePopoverOnBlur, shouldShowPopove
 import { bundledCodexPath, bundledYtDlpPath, codexHomeDirectory, codexWorkingDirectory } from "./app-paths";
 import { hasScanNowArgument, hasShowWindowArgument } from "./app-arguments";
 import { loadFirstEnvFile, loadNearestEnvLocal } from "./runtime-env";
+import { AppUpdater } from "./updater";
 import type { AppState, SetupCheckItem, SetupCheckResult } from "./types";
 
 const appRoot = app.getAppPath();
@@ -46,6 +47,7 @@ let telegram: TelegramConnector;
 let nativeConnectors: Partial<Record<OAuthProvider, SourceConnector>> = {};
 let youtubeChannelConnector: YouTubeChannelConnector;
 let birdTwitterConnector: BirdTwitterConnector;
+const appUpdater = new AppUpdater(app.isPackaged);
 const activeNotifications = new Set<Notification>();
 let pinPopoverUntilUserCloses = false;
 let popoverPinnedMode: boolean | null = null;
@@ -144,6 +146,7 @@ async function bootstrap(): Promise<void> {
   createTray();
   registerIpc();
   registerPowerMonitor();
+  appUpdater.start();
 
   const persistedState = await store.load();
   const persistedSourceConnectionCount = (await store.listSourceConnections())
@@ -612,6 +615,13 @@ function registerIpc(): void {
     if (!connection) throw new Error("That source connection is no longer available.");
     return scanService.getState();
   });
+  ipcMain.handle("app:getUpdateStatus", () => appUpdater.getStatus());
+  ipcMain.handle("app:installUpdate", () => {
+    appUpdater.installAndRestart();
+  });
+  appUpdater.onStatusChange((status) => {
+    popover?.webContents.send("app:updateStatusChanged", status);
+  });
   scanService.onChange((state) => {
     updateTrayFromState(state);
     popover?.webContents.send("app:stateChanged", state);
@@ -803,6 +813,7 @@ app.on("window-all-closed", () => {});
 app.on("before-quit", () => {
   if (devRendererReloadTimer) clearTimeout(devRendererReloadTimer);
   devRendererWatcher?.close();
+  appUpdater.stop();
   scanService?.stop();
   popover?.destroy();
 });

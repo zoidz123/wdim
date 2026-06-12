@@ -34,7 +34,25 @@ cd <repo-root>
 bun run release:desktop
 ```
 
-This vendors Codex and yt-dlp, builds the Electron app, signs it, notarizes it, and writes a DMG like `desktop/release/wdim-0.1.0-arm64.dmg`.
+This vendors Codex and yt-dlp, builds the Electron app, signs it, notarizes it, and writes:
+
+- `desktop/release/wdim-<version>-arm64.dmg` — the website download.
+- `desktop/release/wdim-<version>-arm64-mac.zip` (+ `.blockmap`) — what the in-app auto-updater installs from.
+- `desktop/release/latest-mac.yml` — the auto-update feed manifest.
+
+## Publish
+
+Upload everything to the `wdim-downloads` R2 bucket (served at `download.wdim.app`):
+
+```bash
+bun run --cwd desktop publish:r2
+```
+
+The script uploads `latest-mac.yml` last so running apps never see a manifest
+that points at a zip that has not finished uploading. Once it lands, installed
+apps pick the update up within four hours (or on next launch) and show the
+"Update now" button. Finally, point `site/app/page.tsx` `betaDownloadHref` at
+the new DMG.
 
 ## Verify
 

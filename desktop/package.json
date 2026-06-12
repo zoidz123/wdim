@@ -1,6 +1,6 @@
 {
   "name": "what-did-i-miss-desktop",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Mac app that turns missed updates into a short catch-up briefing.",
   "author": "wdim",
   "private": true,
@@ -14,8 +14,9 @@
     "vendor:codex": "bun run scripts/vendor-codex.ts",
     "vendor:ytdlp": "bun run scripts/vendor-ytdlp.ts",
     "dist": "bun run dist:unsigned",
-    "dist:unsigned": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg",
-    "dist:signed": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && electron-builder --mac dmg",
+    "dist:unsigned": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
+    "dist:signed": "bun run vendor:codex && bun run vendor:ytdlp && bun run build && electron-builder --mac",
+    "publish:r2": "bun run scripts/publish-r2.ts",
     "smoke:codex": "bun run scripts/codex-smoke.ts",
     "smoke:twitter-ui": "electron scripts/twitter-ui-smoke.cjs",
     "test": "bun test",
@@ -30,9 +31,16 @@
       "icon": "build/icon.icns",
       "notarize": true,
       "target": [
-        "dmg"
+        "dmg",
+        "zip"
       ]
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://download.wdim.app/releases"
+      }
+    ],
     "files": [
       "dist/**/*",
       "package.json"
@@ -67,6 +75,7 @@
   "dependencies": {
     "@steipete/bird": "0.8.0",
     "@what-did-i-miss/shared": "workspace:*",
+    "electron-updater": "^6.6.2",
     "googleapis": "^166.0.0",
     "qrcode": "^1.5.4",
     "telegram": "^2.26.22"
