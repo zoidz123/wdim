@@ -10,6 +10,8 @@ const execFileAsync = promisify(execFile);
 // is the lever; 300 verified to return a full 300 in one call. The whole point
 // of the product is to comb a large feed and surface only what matters.
 const DEFAULT_HOME_COUNT = 300;
+// Shallow retry size when the deep sweep hits transient X server errors.
+const FALLBACK_HOME_COUNT = 100;
 
 export type BirdRunner = (args: string[]) => Promise<{ stdout: string; stderr: string }>;
 
@@ -45,7 +47,7 @@ export class BirdTwitterConnector {
   async verifyAccount(): Promise<{ username: string }> {
     const { stdout } = await this.runBird(["whoami"]);
     const username = parseBirdUsername(stdout);
-    if (!username) throw new Error("Could not read your X login. Log into x.com in Chrome, then try again.");
+    if (!username) throw new Error("Could not read your X login. Log into x.com in Chrome, Brave, Edge, or Firefox, then try again. (Safari requires giving wdim Full Disk Access in System Settings.)");
     return { username };
   }
 
@@ -57,7 +59,7 @@ export class BirdTwitterConnector {
     const now = this.now().toISOString();
     try {
       const count = typeof connection.config?.homeCount === "number" ? connection.config.homeCount : DEFAULT_HOME_COUNT;
-      const { stdout } = await this.runBird(["home", "-n", String(count), "--json"]);
+      const { stdout } = await this.fetchHomeWithFallback(connection.id, count);
       const allEvents = parseBirdTweets(stdout, connection);
       const events = filterByWindow(allEvents, context?.since);
       const newestAt = newestReceivedAt(events);
@@ -88,13 +90,54 @@ export class BirdTwitterConnector {
         cursors: [],
         health: {
           connectionId: connection.id,
-          status: /cookie|credential|auth/i.test(message) ? "needs_auth" : "error",
-          detail: message,
+          status: isBirdAuthFailure(message) ? "needs_auth" : "error",
+          detail: compactBirdError(message),
           checkedAt: now
         }
       };
     }
   }
+
+  // Deep paginated sweeps intermittently hit X server errors. Retry once with a
+  // smaller fetch so a flaky deep page costs depth, not the whole scan.
+  private async fetchHomeWithFallback(connectionId: string, count: number): Promise<{ stdout: string; stderr: string }> {
+    try {
+      return await this.runBird(["home", "-n", String(count), "--json"]);
+    } catch (error) {
+      if (count <= FALLBACK_HOME_COUNT || isBirdAuthFailure(error instanceof Error ? error.message : String(error))) throw error;
+      console.warn("[bird] deep home fetch failed; retrying shallow", {
+        connectionId,
+        requested: count,
+        fallback: FALLBACK_HOME_COUNT
+      });
+      return this.runBird(["home", "-n", String(FALLBACK_HOME_COUNT), "--json"]);
+    }
+  }
+}
+
+// Classify from bird's fatal line (❌ ...), not the whole output: for Chrome
+// users every run includes Safari cookie warnings (⚠️ ...), so matching
+// "cookie" anywhere mislabels transient X server errors as sign-in problems.
+export function isBirdAuthFailure(message: string): boolean {
+  const fatalLines = message
+    .split(/\r?\n/)
+    .filter((line) => line.includes("❌") || /could not read your x login/i.test(line));
+  const scope = fatalLines.length ? fatalLines.join("\n") : message;
+  if (/internal server error|rate limit|429|timed? ?out|network|ENOTFOUND|ECONN/i.test(scope)) return false;
+  return /no twitter cookies found|not logged in|could not read your x login|unauthorized|forbidden|401|403|cookie/i.test(scope);
+}
+
+// Health details end up in the UI; collapse bird's repeated per-page errors
+// ("Internal server error, Internal server error, ...") into one line.
+export function compactBirdError(message: string): string {
+  const fatal = message.split(/\r?\n/).find((line) => line.includes("❌"))?.trim() ?? message.trim();
+  const unique: string[] = [];
+  for (const part of fatal.split(/,\s*/)) {
+    if (unique.includes(part) || unique.some((existing) => existing.endsWith(part))) continue;
+    unique.push(part);
+  }
+  const deduped = unique.join(", ");
+  return deduped.length > 300 ? `${deduped.slice(0, 297)}...` : deduped;
 }
 
 export function parseBirdUsername(stdout: string): string | null {

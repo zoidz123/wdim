@@ -1,5 +1,11 @@
 # what-did-i-miss-desktop
 
+## 0.1.6
+
+### Patch Changes
+
+- X / Twitter scan resilience: retry deep timeline sweeps with a smaller fetch when X returns transient server errors, classify connector health from bird's fatal error line so Safari cookie warnings no longer mislabel transient failures as "Needs sign-in", and collapse repeated per-page errors in health details.
+
 ## 0.1.5
 
 ### Patch Changes

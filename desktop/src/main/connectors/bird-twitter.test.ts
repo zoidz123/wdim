@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseBirdTweets, parseBirdUsername } from "./bird-twitter";
+import { compactBirdError, isBirdAuthFailure, parseBirdTweets, parseBirdUsername } from "./bird-twitter";
 import type { SourceConnection } from "./types";
 
 const connection: SourceConnection = {
@@ -92,5 +92,41 @@ describe("parseBirdUsername", () => {
 
   test("returns null when no handle is present", () => {
     expect(parseBirdUsername("❌ Missing required credentials")).toBeNull();
+  });
+});
+
+describe("isBirdAuthFailure", () => {
+  test("transient X server errors are not auth failures, even with Safari cookie warnings present", () => {
+    const message = [
+      "Command failed: /Applications/wdim.app/Contents/MacOS/wdim bird.mjs home -n 300 --json",
+      "⚠️ Failed to read Safari cookies: EPERM: operation not permitted, open '/Users/u/Library/Containers/com.apple.Safari/Data/Library/Cookies/Cookies.binarycookies'",
+      "⚠️ No Twitter cookies found in Safari. Make sure you are logged into x.com in Safari.",
+      "❌ Failed to fetch home timeline: Internal server error, Internal server error, Internal server error"
+    ].join("\n");
+    expect(isBirdAuthFailure(message)).toBe(false);
+  });
+
+  test("missing login is an auth failure", () => {
+    expect(isBirdAuthFailure("Could not read your X login. Log into x.com in Chrome, Brave, Edge, or Firefox, then try again.")).toBe(true);
+    expect(isBirdAuthFailure("❌ No Twitter cookies found in any browser.")).toBe(true);
+  });
+
+  test("unauthorized fatal line is an auth failure", () => {
+    expect(isBirdAuthFailure("⚠️ No Twitter cookies found in Safari.\n❌ Failed to fetch home timeline: Unauthorized")).toBe(true);
+  });
+});
+
+describe("compactBirdError", () => {
+  test("collapses repeated per-page errors into one line", () => {
+    const message = [
+      "⚠️ Failed to read Safari cookies: EPERM",
+      `❌ Failed to fetch home timeline: ${Array(90).fill("Internal server error").join(", ")}`
+    ].join("\n");
+    const compact = compactBirdError(message);
+    expect(compact).toBe("❌ Failed to fetch home timeline: Internal server error");
+  });
+
+  test("falls back to the raw message when there is no fatal line", () => {
+    expect(compactBirdError("spawn bird ENOENT")).toBe("spawn bird ENOENT");
   });
 });
